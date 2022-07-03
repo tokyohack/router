@@ -39,7 +39,7 @@ class LINENotifyBot:
         )
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     bot = LINENotifyBot(
         access_token
     )

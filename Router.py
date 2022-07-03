@@ -66,9 +66,9 @@ class Router:
                 **self.post_kwargs
             )
         except Exception as e:
-            if "WinError 10055" in str(e):
+            if 'WinError 10055' in str(e):
                 raise MemoryIsOverflow_Exception()
-            print("ConnectionError_" + str(e.args))
+            print('ConnectionError_' + str(e.args))
             time.sleep(2)
             return self.ipChange()
         html = str(called.text)
@@ -123,9 +123,9 @@ class Router:
                 **self.post_kwargs
             )
         except Exception as e:
-            if "WinError 10055" in str(e):
+            if 'WinError 10055' in str(e):
                 raise MemoryIsOverflow_Exception()
-            print("ConnectionError_" + str(e.args))
+            print('ConnectionError_' + str(e.args))
             time.sleep(60)
             return self.ipChange()
         if not '200' == str(reqTokenGetDisc.status_code):
@@ -136,7 +136,7 @@ class Router:
         # cookies = {
         # 	'HGWSESSIONID': cookie
         # }
-        soup = BeautifulSoup(reqTokenGetDisc.content, "html.parser")
+        soup = BeautifulSoup(reqTokenGetDisc.content, 'html.parser')
         # token = soup.find('input',{'name':'SECURITY_TOKEN'})['value']
         token = soup.find('input', {'name': 'SECURITY_TOKEN'}).get('value')
         print(token)
@@ -167,7 +167,7 @@ class Router:
                     self.URL + self.URL_BASIC_V4PPPOE,
                     **self.post_kwargs
                 )
-                soup = BeautifulSoup(reqTokenGetCon.content, "html.parser")
+                soup = BeautifulSoup(reqTokenGetCon.content, 'html.parser')
                 # token = soup.find('input',{'name':'SECURITY_TOKEN'})['value']
                 token = soup.find('input', {'name': 'SECURITY_TOKEN'}).get('value')
                 print(token)
@@ -187,13 +187,13 @@ class Router:
                 print(str(connect.status_code))
                 connectChk = connect.text
             except Exception as e:
-                if "WinError 10055" in str(e):
+                if 'WinError 10055' in str(e):
                     raise MemoryIsOverflow_Exception()
                 self.post_kwargs.update(
                     data=None,
                     # cookies=cookies
                 )
-                print("ConnectionError_" + str(e.args))
+                print('ConnectionError_' + str(e.args))
                 if 'None' in str(e):
                     pass
                 else:
