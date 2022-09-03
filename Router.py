@@ -3,7 +3,7 @@
 import requests, re, datetime, time, random, sys
 from bs4 import BeautifulSoup
 from line_notify_bot import LINENotifyBot
-from ERRCODE import MemoryIsOverflow_Exception
+from ERRCODE import MemoryIsOverflow_Exception,MaxRetryError
 
 loop = [1]
 
@@ -125,6 +125,9 @@ class Router:
         except Exception as e:
             if 'WinError 10055' in str(e):
                 raise MemoryIsOverflow_Exception()
+            print('ConnectionError_' + str(e.args))
+            if 'MaxRetryError' in str(e):
+                raise MaxRetryError()
             print('ConnectionError_' + str(e.args))
             time.sleep(60)
             return self.ipChange()
