@@ -18,7 +18,7 @@ PASS                      ベーシック認証時のPassword
 IP                        192.168.1.1など
 LINE_TOKEN                LINE Notify API
 PHONE_NUM                 家の固定電話 市外局番から
-IGNORE_PHONENUM           発着信を無視する電話番号子コンマ","で複数対応
+IGNORE_PHONENUM           発着信を無視する電話番号コンマ","で複数対応
 
 ## イメージ
 ![image](https://gitimagefolder.s3.ap-northeast-1.amazonaws.com/LineNotify/Line.png)
