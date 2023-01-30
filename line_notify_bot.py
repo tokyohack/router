@@ -1,5 +1,3 @@
-# coding: utf-8
-
 import requests
 
 
@@ -14,7 +12,7 @@ class LINENotifyBot:
             'Authorization': 'Bearer ' + access_token
         }
 
-    def send(
+    def _send(
             self,
             message,
             image=None,
@@ -43,6 +41,6 @@ if __name__ == '__main__':
     bot = LINENotifyBot(
         access_token
     )
-    bot.send(
+    bot._send(
         message=''
     )

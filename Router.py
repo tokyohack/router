@@ -1,12 +1,15 @@
-# coding: utf-8
-
-import requests, re, datetime, time, random, sys
+import datetime
+import random
+import re
+import requests
+import sys
+import time
 from bs4 import BeautifulSoup
+
+from ERRCODE import MemoryIsOverflow_Exception, MaxRetryError
 from line_notify_bot import LINENotifyBot
-from ERRCODE import MemoryIsOverflow_Exception,MaxRetryError
 
 loop = [1]
-
 # batから引数を受け取る
 ID = sys.argv[1]
 PASSWD = sys.argv[2]
@@ -26,13 +29,12 @@ class Router:
             MY_PHONE_NUM,
             IGNORE_PHONENUM=None
     ):
-
-        self.URL = 'http://' + IP + '/ntt/'
-        self.URL_BASIC_V4PPPOE = 'basic/v4pppoe/'
-        self.CALL_HIS = 'information/callHistory'
-        self.LINE_ACCESS_TOKEN = LINE_ACCESS_TOKEN
-        self.MY_PHONE_NUM = MY_PHONE_NUM
-        self.IGNORE_PHONENUM = IGNORE_PHONENUM
+        self.__URL = 'http://' + IP + '/ntt/'
+        self.__URL_BASIC_V4PPPOE = 'basic/v4pppoe/'
+        self.__CALL_HIS = 'information/callHistory'
+        self.__LINE_ACCESS_TOKEN = LINE_ACCESS_TOKEN
+        self.__MY_PHONE_NUM = MY_PHONE_NUM
+        self.__IGNORE_PHONENUM = IGNORE_PHONENUM
         connectTimeoutSta = random.randint(12, 24)
         connectTimeoutEnd = random.randint(1, 10)
         readTimeoutSta = random.randint(24, 30)
@@ -41,10 +43,9 @@ class Router:
             float(f'{connectTimeoutSta}.{connectTimeoutEnd}'),
             float(f'{readTimeoutSta}.{readTimeoutEnd}')
         )
-
         self.session = requests.Session()
         headers = {
-            'referer': self.URL,
+            'referer': self.__URL,
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36'
         }
         auth = (ID, PASSWD)
@@ -62,7 +63,7 @@ class Router:
             callHisLisOpen = CALL_HIS_LIS.read()
         try:
             called = self.session.get(
-                self.URL + self.CALL_HIS,
+                self.__URL + self.__CALL_HIS,
                 **self.post_kwargs
             )
         except Exception as e:
@@ -90,7 +91,6 @@ class Router:
                             print('着信有り')
                         else:
                             call_arriveORsend = '宛先不明が不明です。\n'
-
                         CallLi = re.sub(r' 1 TEL1 - - - -', '', CallLi)
                         CallLi = re.sub(r' - - - - - -', '', CallLi)
                         CallLi = re.sub(r' - - - - 1 TEL1 0 -', '', CallLi)
@@ -98,15 +98,14 @@ class Router:
                         CallLi = re.sub(r' 接続先切断', '\n接続先切断', CallLi)
                         CallLi = re.sub(r' 自切断', '\n自切断', CallLi)
                         CallLi = re.sub(r' 宛先不明', '\n宛先不明', CallLi)
-                        CallLi = re.sub(r' ' + self.MY_PHONE_NUM + ' ', '\nhttps://www.google.com/search?q=', CallLi)
-
+                        CallLi = re.sub(r' ' + self.__MY_PHONE_NUM + ' ', '\nhttps://www.google.com/search?q=', CallLi)
                         print('\n更新時間' + str(datetime.datetime.now()) + '\n' + call_arriveORsend + CallLi + '\n')
-                        if 'ユーザ拒否(P)' in CallLi or self.IGNORE_PHONENUM in CallLi:
-                            print('ユーザ拒否(P)' + '_or_' + 'registeredIgnoreNum' + '_' + self.IGNORE_PHONENUM)
+                        if 'ユーザ拒否(P)' in CallLi or self.__IGNORE_PHONENUM in CallLi:
+                            print('ユーザ拒否(P)' + '_or_' + 'registeredIgnoreNum' + '_' + self.__IGNORE_PHONENUM)
                             pass
                         else:
-                            bot = LINENotifyBot(access_token=self.LINE_ACCESS_TOKEN)
-                            bot.send(
+                            bot = LINENotifyBot(access_token=self.__LINE_ACCESS_TOKEN)
+                            bot._send(
                                 message='\n更新時間' + str(
                                     datetime.datetime.now()) + '\n' + call_arriveORsend + CallLi + '\n'
                             )
@@ -119,7 +118,7 @@ class Router:
     def ipChange(self):
         try:
             reqTokenGetDisc = self.session.get(
-                self.URL + self.URL_BASIC_V4PPPOE,
+                self.__URL + self.__URL_BASIC_V4PPPOE,
                 **self.post_kwargs
             )
         except Exception as e:
@@ -152,22 +151,20 @@ class Router:
             # cookies=cookies
         )
         disconnect = self.session.post(
-            self.URL + self.URL_BASIC_V4PPPOE + 'disconnect',
+            self.__URL + self.__URL_BASIC_V4PPPOE + 'disconnect',
             **self.post_kwargs
         )
         print(str(disconnect.status_code))
-
         self.post_kwargs.update(
             data=None,
             # cookies=cookies
         )
-
         connectChk = 'None'
         i = 0
         while not '<div id = "STATUS_SESSION1" >未接続</div>' in connectChk:
             try:
                 reqTokenGetCon = self.session.get(
-                    self.URL + self.URL_BASIC_V4PPPOE,
+                    self.__URL + self.__URL_BASIC_V4PPPOE,
                     **self.post_kwargs
                 )
                 soup = BeautifulSoup(reqTokenGetCon.content, 'html.parser')
@@ -182,9 +179,8 @@ class Router:
                     data=posdata,
                     # cookies=cookies
                 )
-
                 connect = self.session.post(
-                    self.URL + self.URL_BASIC_V4PPPOE + 'connect',
+                    self.__URL + self.__URL_BASIC_V4PPPOE + 'connect',
                     **self.post_kwargs
                 )
                 print(str(connect.status_code))
