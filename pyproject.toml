@@ -1,0 +1,31 @@
+[project]
+name = "router_client"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "beautifulsoup4>=4.13.3",
+    "black>=25.1.0",
+    "dotenv>=0.9.9",
+    "flake8==7.0.0",
+    "monkeytype>=23.3.0",
+    "mypy>=1.15.0",
+    "pyproject-flake8>=7.0.0",
+    "pytypes>=1.0b10",
+    "requests>=2.32.3",
+    "ruff>=0.11.3",
+    "types-requests>=2.32.0.20250328",
+]
+
+[tool.mypy]
+ignore_missing_imports = 1
+strict = true
+
+[tool.black]
+line-length = 88
+
+[tool.flake8]
+max-line-length = 88
+max-complexity = 20
+extend-ignore = ["E203", "W503", "W504"]
+statistics = true

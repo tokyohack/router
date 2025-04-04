@@ -1,0 +1,8 @@
+# config.ini
+[settings]
+__BASE_URL               = http://{ip}
+__MAIN_PATH              = /ntt
+__SUB_PATH_BASIC_V4PPPOE = /basic/v4pppoe
+__CALL_HIS               = /information/callHistory
+__MY_PHONE_NUM           =
+__IGNORE_PHONE_NUM       =
